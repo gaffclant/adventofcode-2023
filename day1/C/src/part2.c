@@ -2,7 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #define LINESIZE 512
-char *reverse(char *);
+
+// Simple function to reverse a string
+void reverse(char *str) {
+    size_t len = strlen(str);
+    for (size_t i = 0, k = len - 1; i < (len / 2); i++, k--) {
+        char temp = str[k];
+        str[k] = str[i];
+        str[i] = temp;
+    }
+}
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -25,12 +34,11 @@ int main(int argc, char *argv[]) {
         char *words[9] = {"one", "two",   "three", "four", "five",
                           "six", "seven", "eight", "nine"};
         size_t firstidx = strcspn(line, "0123456789");
-        char *reversed = reverse(line);
-        size_t lastidx =
-            strlen(line) - strcspn(reverse(line), "0123456789") - 1;
-        free(reversed);
-        int firstnum = (line[firstidx] - 48);
-        int lastnum = (line[lastidx] - 48);
+        reverse(line);
+        size_t lastidx = strlen(line) - strcspn(line, "0123456789") - 1;
+        reverse(line);
+        int tens = (line[firstidx] - 48);
+        int ones = (line[lastidx] - 48);
 
         if (firstidx == strlen(line)) {
             lastidx = 0;
@@ -49,30 +57,18 @@ int main(int argc, char *argv[]) {
 
             if (firstidx > (size_t)(firstword - line)) {
                 firstidx = firstword - line;
-                firstnum = i + 1;
+                tens = i + 1;
             }
             if (lastidx <= (size_t)(lastword - line)) {
                 lastidx = lastword - line;
-                lastnum = i + 1;
+                ones = i + 1;
             }
         }
-        result += firstnum * 10 + lastnum;
+        result += tens * 10 + ones;
     }
 
     printf("%i\n", result);
 
     fclose(file);
     return 0;
-}
-
-char *reverse(char *str) {
-    char *newstr = malloc(LINESIZE);
-    strcpy(newstr, str);
-    size_t len = strlen(newstr);
-    for (size_t i = 0, k = len - 1; i < (len / 2); i++, k--) {
-        char temp = newstr[k];
-        newstr[k] = newstr[i];
-        newstr[i] = temp;
-    }
-    return newstr;
 }

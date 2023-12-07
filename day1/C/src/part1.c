@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define LINESIZE 512
+
+// Simple function to reverse a string
+void reverse(char *str) {
+    size_t len = strlen(str);
+    for (size_t i = 0, k = len - 1; i < (len / 2); i++, k--) {
+        char temp = str[k];
+        str[k] = str[i];
+        str[i] = temp;
+    }
+}
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -14,25 +25,19 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    size_t linesize = 512;
+    size_t linesize = LINESIZE;
     char *line = malloc(linesize);
     int result = 0;
     while (-1 != getline(&line, &linesize, file)) {
-        size_t len = strlen(line);
-        char *str = malloc(linesize);
-        memcpy(str, line, linesize);
-
-        for (size_t i = 0, k = len - 1; i < (len / 2); i++, k--) {
-            char temp = str[k];
-            str[k] = str[i];
-            str[i] = temp;
-        }
-
         size_t firstnum = strcspn(line, "0123456789");
-        size_t lastnum = strcspn(str, "0123456789");
+        int tens = 10 * (line[firstnum] - 48);
 
-        result += (line[firstnum] - 48) * 10 + (str[lastnum] - 48);
-        free(str);
+        reverse(line);
+
+        size_t lastnum = strcspn(line, "0123456789");
+        int ones = (line[lastnum] - 48);
+
+        result += tens + ones;
     }
     printf("%i\n", result);
 
