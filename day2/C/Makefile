@@ -2,7 +2,7 @@ TARGET = solution
 BIN = bin
 SRC = src
 CC = clang
-WARNINGS = -Wall -Werror -Wextra
+WARNINGS = -Wall -Werror -Wextra -g
 CFLAGS = 
 
 .PHONY: all
